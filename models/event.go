@@ -11,6 +11,16 @@ type Event struct {
 	RetryPolicy string
 }
 
+// Dispatch : Fire a specific event to send all subscriber webhook a
+// post request with the provided payload
+func Dispatch(eventID string, payload map[string]string) {
+	db := Connect()
+	defer db.Close()
+	var event Event
+	db.First(&event, "event_id = ?", eventID)
+	event.NotifySubscribers(payload)
+}
+
 // NotifySubscribers trigger all http subscribers
 // tied to the event being set
 func (e Event) NotifySubscribers(payload map[string]string) {

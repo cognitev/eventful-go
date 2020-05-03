@@ -23,5 +23,5 @@ func (s Subscription) Notify(payload map[string]string, retryPolicy string) {
 	if err := json.Unmarshal([]byte(s.Headers), &headers); err != nil {
 		panic(err)
 	}
-	tasks.Notify(s.Webhook, s.Event, payload)
+	tasks.PerformNotify(s.Webhook, s.Event, payload, headers)
 }

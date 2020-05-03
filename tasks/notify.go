@@ -7,8 +7,17 @@ import (
 	"net/http"
 )
 
-// Notify scheduled task to send http post request to subscriber with provided data
-func Notify(webhook string, event string, payload map[string]string, headers map[string]string) {
+// PerformNotify scheduled task to send http post request to subscriber with provided data
+func PerformNotify(webhook string, event string, payload map[string]string, headers map[string]string) {
+	celeryClient := intialize()
+	celeryClient.Register("worker.notify", notify)
+	_, err := celeryClient.Delay("worker.notify", webhook, event, payload, headers)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func notify(webhook string, event string, payload map[string]string, headers map[string]string) {
 	client := &http.Client{}
 
 	payloadBytes, err := json.Marshal(payload)
