@@ -13,7 +13,7 @@ type Event struct {
 
 // Dispatch : Fire a specific event to send all subscriber webhook a
 // post request with the provided payload
-func Dispatch(eventID string, payload map[string]string) {
+func Dispatch(eventID string, payload map[string]interface{}) {
 	db := Connect()
 	defer db.Close()
 	var event Event
@@ -23,7 +23,7 @@ func Dispatch(eventID string, payload map[string]string) {
 
 // NotifySubscribers trigger all http subscribers
 // tied to the event being set
-func (e Event) NotifySubscribers(payload map[string]string) {
+func (e Event) NotifySubscribers(payload map[string]interface{}) {
 	db := Connect()
 	defer db.Close()
 	var subs []Subscription

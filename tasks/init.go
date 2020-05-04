@@ -8,6 +8,12 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
+const (
+	notifyTask = "worker.notify"
+)
+
+var registeredTasks = ""
+
 func intialize() *gocelery.CeleryClient {
 	redisPool := &redis.Pool{
 		Dial: func() (redis.Conn, error) {
@@ -26,6 +32,8 @@ func intialize() *gocelery.CeleryClient {
 		&gocelery.RedisCeleryBackend{Pool: redisPool},
 		workers,
 	)
+	cli.Register(notifyTask, Notify)
+
 	return cli
 
 }

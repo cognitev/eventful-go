@@ -18,7 +18,7 @@ type Subscription struct {
 }
 
 // Notify : Trigger Subscriber by calling its webhook
-func (s Subscription) Notify(payload map[string]string, retryPolicy string) {
+func (s Subscription) Notify(payload map[string]interface{}, retryPolicy string) {
 	var headers map[string]string
 	if err := json.Unmarshal([]byte(s.Headers), &headers); err != nil {
 		panic(err)
